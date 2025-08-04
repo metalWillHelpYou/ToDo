@@ -11,36 +11,29 @@ struct TaskListView: View {
     @StateObject private var viewModel = TaskViewModel()
     
     var body: some View {
-        NavigationView {
-            VStack {
-                List(viewModel.savedTasks) { task in
-                    HStack(alignment: .top) {
-                        Button {
-                            
-                        } label: {
-                            Image(systemName: task.completed ? "checkmark.circle" : "circle")
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundStyle(task.completed ? .yellow : .primary)
-                                .padding(.trailing, 2)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 16) {
-                            Text(task.todo ?? "Без названия")
-                                .font(.title2)
-                                .strikethrough(task.completed, color: .gray)
-                                .foregroundColor(task.completed ? .gray : .primary)
-
-                            Text(viewModel.formatDateForDisplay(task.timestamp))
-                                .foregroundStyle(.gray)
-                        }
+        NavigationStack {
+            List(viewModel.filteredTasks) { task in
+                HStack(alignment: .top) {
+                    Button {
+                        viewModel.toggleCompleteStatus(for: task)
+                    } label: {
+                        Image(systemName: task.completed ? "checkmark.circle" : "circle")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundStyle(task.completed ? .yellow : .primary)
+                            .padding(.trailing, 2)
                     }
+                    
+                    taskCardfor(task)
+                        .onTapGesture { viewModel.selectedTask = task }
                 }
-                .listStyle(.plain)
             }
-            .navigationTitle("Список задач")
-            .toolbar(.visible, for: .bottomBar)
-            .toolbar(.visible, for: .bottomBar)
+            .listStyle(.plain)
+            .navigationTitle("Задачи")
+            .searchable(text: $viewModel.searchText, prompt: "Search")
+            .navigationDestination(item: $viewModel.selectedTask) { task in
+                TaskView(viewModel: viewModel, task: task)
+            }
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     ZStack {
@@ -50,7 +43,7 @@ struct TaskListView: View {
                         HStack {
                             Spacer()
                             Button(action: {
-
+                                
                             }) {
                                 Image(systemName: "square.and.pencil")
                                     .foregroundColor(.yellow)
@@ -59,6 +52,20 @@ struct TaskListView: View {
                     }
                 }
             }
+        }
+    }
+}
+
+extension TaskListView {
+    private func taskCardfor(_ task: TaskEntity) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(task.todo ?? "Без названия")
+                .font(.title2)
+                .strikethrough(task.completed, color: .gray)
+                .foregroundColor(task.completed ? .gray : .primary)
+            
+            Text(viewModel.formatDateForDisplay(task.timestamp))
+                .foregroundStyle(.gray)
         }
     }
 }

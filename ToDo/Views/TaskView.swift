@@ -8,16 +8,22 @@
 import SwiftUI
 
 struct TaskView: View {
+    @ObservedObject var viewModel: TaskViewModel
+    let task: TaskEntity
+    
     var body: some View {
-        NavigationStack {
-            VStack {
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.background)
+        VStack(alignment: .leading, spacing: 16) {
+            Text(task.todo ?? "Unknown")
+                .font(.system(size: 34, weight: .heavy))
+            
+            Text(viewModel.formatDateForDisplay(task.timestamp))
+                .foregroundStyle(.gray)
+            
+            Spacer()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.background)
+        .padding(.horizontal)
     }
 }
 
-#Preview {
-    TaskView()
-}

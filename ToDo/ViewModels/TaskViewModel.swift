@@ -11,8 +11,9 @@ import CoreData
 @MainActor
 final class TaskViewModel: ObservableObject {
     let container: NSPersistentContainer
+    @Published var selectedTask: TaskEntity?
     @Published var savedTasks: [TaskEntity] = []
-    @Published var taskTextHandler: String = ""
+    @Published var searchText: String = ""
     
     init() {
         container = NSPersistentContainer(name: "CoreDataModel")
@@ -32,7 +33,6 @@ final class TaskViewModel: ObservableObject {
         request.sortDescriptors = [sort]
         do {
             savedTasks = try container.viewContext.fetch(request)
-            print("Success fetch")
         } catch  {
             print("Error: \(error)")
         }
@@ -72,6 +72,11 @@ final class TaskViewModel: ObservableObject {
         }
     }
     
+    func toggleCompleteStatus(for task: TaskEntity) {
+        task.completed.toggle()
+        saveData()
+    }
+    
     func importFromAPIIfNeeded() {
         let alreadyImported = UserDefaults.standard.bool(forKey: "didImportInitialTodos")
         guard !alreadyImported else { return }
@@ -102,6 +107,15 @@ final class TaskViewModel: ObservableObject {
         let (data, _) = try await URLSession.shared.data(from: url)
         let decoded = try JSONDecoder().decode(TodoResponse.self, from: data)
         return decoded.todos
+    }
+    
+    var filteredTasks: [TaskEntity] {
+        guard !searchText.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return savedTasks
+        }
+        return savedTasks.filter {
+            $0.todo?.localizedCaseInsensitiveContains(searchText) == true
+        }
     }
     
     func formatDateForDisplay(_ date: Date?) -> String {
