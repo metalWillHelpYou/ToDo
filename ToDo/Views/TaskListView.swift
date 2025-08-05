@@ -9,6 +9,8 @@ import SwiftUI
 
 struct TaskListView: View {
     @StateObject private var viewModel = TaskViewModel()
+    @State private var showEditView = false
+    @State private var taskForEditing: TaskEntity?
     
     var body: some View {
         NavigationStack {
@@ -27,6 +29,30 @@ struct TaskListView: View {
                     taskCardfor(task)
                         .onTapGesture { viewModel.selectedTask = task }
                 }
+                .contextMenu {
+                    Button {
+                        taskForEditing = task
+                        showEditView.toggle()
+                    } label: {
+                        Label("Редактировать", systemImage: "pencil")
+                    }
+                    
+                    Button {
+
+                    } label: {
+                        Label("Поделиться", image: "export")
+                    }
+                    
+                    Button(role: .destructive) {
+                        viewModel.delete(task)
+                    } label: {
+                        Label("Удалить", systemImage: "trash")
+                    }
+                }
+            }
+            .sheet(item: $taskForEditing) { task in
+                EditTitleView(viewModel: viewModel, task: task)
+                    .presentationDetents([.medium])
             }
             .listStyle(.plain)
             .navigationTitle("Задачи")

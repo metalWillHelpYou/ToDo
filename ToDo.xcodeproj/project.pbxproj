@@ -16,6 +16,7 @@
 		9B0B8D762E40FA2700FAEB09 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9B0B8D742E40FA2700FAEB09 /* CoreDataModel.xcdatamodeld */; };
 		9B0B8D782E40FD1F00FAEB09 /* TaskViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0B8D772E40FD1F00FAEB09 /* TaskViewModel.swift */; };
 		9B3E7A922E4115700048D1AC /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E7A912E4115700048D1AC /* DateFormatter.swift */; };
+		9BB7283B2E42011F003BC666 /* EditTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB7283A2E42011F003BC666 /* EditTitleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		9B0B8D752E40FA2700FAEB09 /* TaskEntity.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskEntity.xcdatamodel; sourceTree = "<group>"; };
 		9B0B8D772E40FD1F00FAEB09 /* TaskViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewModel.swift; sourceTree = "<group>"; };
 		9B3E7A912E4115700048D1AC /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		9BB7283A2E42011F003BC666 /* EditTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTitleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +87,7 @@
 			children = (
 				9B0B8D6B2E40F6CC00FAEB09 /* TaskListView.swift */,
 				9B0B8D6D2E40F6DB00FAEB09 /* TaskView.swift */,
+				9BB7283A2E42011F003BC666 /* EditTitleView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -185,6 +188,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B0B8D6C2E40F6CC00FAEB09 /* TaskListView.swift in Sources */,
+				9BB7283B2E42011F003BC666 /* EditTitleView.swift in Sources */,
 				9B0B8D782E40FD1F00FAEB09 /* TaskViewModel.swift in Sources */,
 				9B0B8D762E40FA2700FAEB09 /* CoreDataModel.xcdatamodeld in Sources */,
 				9B3E7A922E4115700048D1AC /* DateFormatter.swift in Sources */,

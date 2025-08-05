@@ -14,6 +14,7 @@ final class TaskViewModel: ObservableObject {
     @Published var selectedTask: TaskEntity?
     @Published var savedTasks: [TaskEntity] = []
     @Published var searchText: String = ""
+    @Published var titleInput: String = ""
     
     init() {
         container = NSPersistentContainer(name: "CoreDataModel")
@@ -49,12 +50,10 @@ final class TaskViewModel: ObservableObject {
     }
 
     
-    func edit(_ task: TaskEntity, newTodo: String, completed: Bool? = nil) {
+    func edit(_ task: TaskEntity, newTodo: String) {
         guard !newTodo.isEmpty else { return }
         task.todo = newTodo
-        if let newStatus = completed {
-            task.completed = newStatus
-        }
+        titleInput = ""
         saveData()
     }
 

@@ -13,9 +13,11 @@ struct TaskView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text(task.todo ?? "Unknown")
-                .font(.system(size: 34, weight: .heavy))
-            
+            HStack{
+                Text(task.todo ?? "Unknown")
+                    .font(.system(size: 34, weight: .heavy))
+                Spacer()
+            }
             Text(viewModel.formatDateForDisplay(task.timestamp))
                 .foregroundStyle(.gray)
             
