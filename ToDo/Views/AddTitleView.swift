@@ -17,6 +17,7 @@ struct AddTitleView: View {
                 .padding(8)
                 .background(.gray)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                .accessibilityIdentifier("taskInputField")
             
             Button {
                 Task {

@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct TaskListView: View {
     @StateObject private var viewModel = TaskViewModel()
     @State private var showEditView = false
@@ -19,6 +17,7 @@ struct TaskListView: View {
         NavigationStack {
             List(viewModel.filteredTasks) { task in
                 taskRow(for: task)
+                    .accessibilityIdentifier("taskRow_\(task.id ?? "")")
             }
             .listStyle(.plain)
             .navigationTitle("Задачи")
@@ -72,6 +71,8 @@ extension TaskListView {
                 .font(.title2)
                 .strikethrough(task.completed, color: .gray)
                 .foregroundColor(task.completed ? .gray : .primary)
+                .accessibilityIdentifier("taskTitle_\(task.id ?? "")")
+
 
             if let content = task.content, !content.isEmpty {
                 Text(content)
@@ -93,11 +94,13 @@ extension TaskListView {
             } label: {
                 Label("Редактировать", systemImage: "pencil")
             }
+            .accessibilityIdentifier("editTaskButton")
 
             Button {
             } label: {
                 Label("Поделиться", systemImage: "square.and.arrow.up")
             }
+            .accessibilityIdentifier("addTaskButton")
 
             Button(role: .destructive) {
                 Task {
@@ -106,6 +109,7 @@ extension TaskListView {
             } label: {
                 Label("Удалить", systemImage: "trash")
             }
+            .accessibilityIdentifier("deleteTaskButton")
         }
     }
 
@@ -123,6 +127,7 @@ extension TaskListView {
                         Image(systemName: "square.and.pencil")
                             .foregroundColor(.yellow)
                     }
+                    .accessibilityIdentifier("addTaskButton")
                 }
             }
         }

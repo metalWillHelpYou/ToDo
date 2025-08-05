@@ -19,6 +19,7 @@ struct EditTitleView: View {
                 .padding(8)
                 .background(.gray)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                .accessibilityIdentifier("editTaskInputField")
             
             Button {
                 viewModel.edit(task, newTodo: viewModel.titleInput)
@@ -30,6 +31,7 @@ struct EditTitleView: View {
                     .background(.yellow)
                     .foregroundStyle(.black)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .accessibilityIdentifier("editTaskButton")
             }
         }
         .padding()
