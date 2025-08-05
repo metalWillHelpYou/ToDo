@@ -21,9 +21,7 @@ struct EditTitleView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             
             Button {
-                Task {
-                    await viewModel.edit(task, newTodo: viewModel.titleInput)
-                }
+                viewModel.edit(task, newTodo: viewModel.titleInput)
                 dismiss()
             } label: {
                 Text("Сохранить")

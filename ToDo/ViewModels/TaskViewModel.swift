@@ -61,12 +61,23 @@ final class TaskViewModel: ObservableObject {
         }
     }
     
-    func edit(_ task: TaskEntity, newTodo: String) async {
-        guard !newTodo.isEmpty else { return }
-        await backgroundContext.perform {
-            task.todo = newTodo
-            self.titleInput = ""
-            self.saveData()
+    func edit(_ task: TaskEntity, newTodo: String) {
+        guard !newTodo.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        
+        task.todo = newTodo
+        titleInput = ""
+        objectWillChange.send()
+        
+        let context = container.newBackgroundContext()
+        context.perform {
+            do {
+                if let objectInContext = try context.existingObject(with: task.objectID) as? TaskEntity {
+                    objectInContext.todo = newTodo
+                    try context.save()
+                }
+            } catch {
+                print("Error saving edited todo: \(error)")
+            }
         }
     }
     
