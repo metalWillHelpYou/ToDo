@@ -10,6 +10,7 @@ import SwiftUI
 struct TaskListView: View {
     @StateObject private var viewModel = TaskViewModel()
     @State private var showEditView = false
+    @State private var showAddView = false
     @State private var taskForEditing: TaskEntity?
     
     var body: some View {
@@ -17,11 +18,11 @@ struct TaskListView: View {
             List(viewModel.filteredTasks) { task in
                 HStack(alignment: .top) {
                     Button {
-                        viewModel.toggleCompleteStatus(for: task)
+                        withAnimation(.spring(duration: 0.2)) {
+                            viewModel.toggleCompleteStatus(for: task)
+                        }
                     } label: {
-                        Image(systemName: task.completed ? "checkmark.circle" : "circle")
-                            .resizable()
-                            .frame(width: 24, height: 24)
+                        Image(task.completed ? "yellowCheckmark" : "circle")
                             .foregroundStyle(task.completed ? .yellow : .primary)
                             .padding(.trailing, 2)
                     }
@@ -50,15 +51,21 @@ struct TaskListView: View {
                     }
                 }
             }
-            .sheet(item: $taskForEditing) { task in
-                EditTitleView(viewModel: viewModel, task: task)
-                    .presentationDetents([.medium])
-            }
             .listStyle(.plain)
             .navigationTitle("Задачи")
             .searchable(text: $viewModel.searchText, prompt: "Search")
             .navigationDestination(item: $viewModel.selectedTask) { task in
                 TaskView(viewModel: viewModel, task: task)
+            }
+            .sheet(isPresented: $showAddView, content: {
+                AddTitleView(viewModel: viewModel)
+                    .presentationDetents([.fraction(0.2)])
+                    .presentationDragIndicator(.visible)
+            })
+            .sheet(item: $taskForEditing) { task in
+                EditTitleView(viewModel: viewModel, task: task)
+                    .presentationDetents([.fraction(0.2)])
+                    .presentationDragIndicator(.visible)
             }
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
@@ -69,7 +76,7 @@ struct TaskListView: View {
                         HStack {
                             Spacer()
                             Button(action: {
-                                
+                                showAddView.toggle()
                             }) {
                                 Image(systemName: "square.and.pencil")
                                     .foregroundColor(.yellow)
@@ -84,11 +91,16 @@ struct TaskListView: View {
 
 extension TaskListView {
     private func taskCardfor(_ task: TaskEntity) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(task.todo ?? "Без названия")
                 .font(.title2)
                 .strikethrough(task.completed, color: .gray)
                 .foregroundColor(task.completed ? .gray : .primary)
+            
+            if let content = task.content {
+                Text(content)
+                    .foregroundStyle(task.completed ? .gray : .white)
+            }
             
             Text(viewModel.formatDateForDisplay(task.timestamp))
                 .foregroundStyle(.gray)

@@ -30,7 +30,7 @@ final class TaskViewModel: ObservableObject {
     
     func fetchTasks() {
         let request = NSFetchRequest<TaskEntity>(entityName: "TaskEntity")
-        let sort = NSSortDescriptor(key: "timestamp", ascending: true)
+        let sort = NSSortDescriptor(key: "timestamp", ascending: false)
         request.sortDescriptors = [sort]
         do {
             savedTasks = try container.viewContext.fetch(request)
@@ -43,6 +43,7 @@ final class TaskViewModel: ObservableObject {
         guard !todo.trimmingCharacters(in: .whitespaces).isEmpty else { return }
         let newTask = TaskEntity(context: container.viewContext)
         newTask.todo = todo
+        newTask.content = ""
         newTask.completed = false
         newTask.timestamp = Date()
         newTask.id = UUID().uuidString
@@ -69,6 +70,11 @@ final class TaskViewModel: ObservableObject {
         } catch {
             print("\(error.localizedDescription)")
         }
+    }
+    
+    func saveContent(for task: TaskEntity, content: String) {
+        task.content = content
+        saveData()
     }
     
     func toggleCompleteStatus(for task: TaskEntity) {

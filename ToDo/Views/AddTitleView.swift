@@ -1,5 +1,5 @@
 //
-//  EditTitleView.swift
+//  AddTitleView.swift
 //  ToDo
 //
 //  Created by metalWillHelpYou on 05.08.2025.
@@ -7,24 +7,22 @@
 
 import SwiftUI
 
-struct EditTitleView: View {
+struct AddTitleView: View {
     @ObservedObject var viewModel: TaskViewModel
     @Environment(\.dismiss) var dismiss
     
-    var task: TaskEntity
-    
     var body: some View {
         VStack {
-            TextField("New title", text: $viewModel.titleInput)                
+            TextField("New toDo", text: $viewModel.titleInput)                
                 .padding(8)
                 .background(.gray)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             
             Button {
-                viewModel.edit(task, newTodo: viewModel.titleInput)
+                viewModel.addTask(todo: viewModel.titleInput)
                 dismiss()
             } label: {
-                Text("Сохранить")
+                Text("Добавить")
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
                     .background(.yellow)
@@ -35,4 +33,3 @@ struct EditTitleView: View {
         .padding()
     }
 }
-
