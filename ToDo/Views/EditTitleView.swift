@@ -28,10 +28,10 @@ struct EditTitleView: View {
                 Text("Сохранить")
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
-                    .background(.yellow)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(viewModel.titleInput.isEmpty ? Color.black.opacity(0.3) : Color.black)
+                    .background(viewModel.titleInput.isEmpty ? Color.yellow.opacity(0.3) : Color.yellow)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .accessibilityIdentifier("editTaskButton")
+                    .animation(.easeInOut(duration: 0.3), value: viewModel.titleInput)
             }
         }
         .padding()

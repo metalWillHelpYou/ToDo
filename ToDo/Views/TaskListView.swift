@@ -103,9 +103,7 @@ extension TaskListView {
             .accessibilityIdentifier("addTaskButton")
 
             Button(role: .destructive) {
-                Task {
-                    await viewModel.delete(task)
-                }
+                viewModel.delete(task)
             } label: {
                 Label("Удалить", systemImage: "trash")
             }

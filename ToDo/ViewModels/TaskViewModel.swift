@@ -48,16 +48,30 @@ final class TaskViewModel: ObservableObject {
         }
     }
 
-    func addTask(todo: String) async {
+    func addTask(todo: String) {
         guard !todo.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-        await backgroundContext.perform {
-            let newTask = TaskEntity(context: self.backgroundContext)
+
+        let context = container.newBackgroundContext()
+        context.perform {
+            let newTask = TaskEntity(context: context)
             newTask.todo = todo
             newTask.content = ""
             newTask.completed = false
             newTask.timestamp = Date()
             newTask.id = UUID().uuidString
-            self.saveData()
+
+            do {
+                try context.save()
+                let objectID = newTask.objectID
+                Task { @MainActor in
+                    if let mainTask = try? self.container.viewContext.existingObject(with: objectID) as? TaskEntity {
+                        self.savedTasks.insert(mainTask, at: 0)
+                    }
+                    self.titleInput = ""
+                }
+            } catch {
+                print("Error saving new task: \(error)")
+            }
         }
     }
     
@@ -81,10 +95,19 @@ final class TaskViewModel: ObservableObject {
         }
     }
     
-    func delete(_ task: TaskEntity) async {
-        await backgroundContext.perform {
-            self.backgroundContext.delete(task)
-            self.saveData()
+    func delete(_ task: TaskEntity) {
+        let objectID = task.objectID
+        let context = container.newBackgroundContext()
+        context.perform {
+            if let backgroundTask = try? context.existingObject(with: objectID) {
+                context.delete(backgroundTask)
+                do {
+                    try context.save()
+                    Task { await self.fetchTasks() }
+                } catch {
+                    print("Error deleting task: \(error)")
+                }
+            }
         }
     }
     
@@ -172,10 +195,12 @@ final class TaskViewModel: ObservableObject {
         if rem100 >= 11 && rem100 <= 14 {
             return "задач"
         }
+        
         switch rem10 {
         case 1: return "задача"
         case 2...4: return "задачи"
         default: return "задач"
+            
         }
     }
 }
