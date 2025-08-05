@@ -14,7 +14,7 @@ struct TodoResponse: Decodable {
 struct Todo: Decodable, Identifiable {
     let id: Int
     let todo: String
-    let content: String
+    let content: String?
     let completed: Bool
     let userId: Int
 }

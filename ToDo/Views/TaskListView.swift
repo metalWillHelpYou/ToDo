@@ -16,17 +16,21 @@ struct TaskListView: View {
     var body: some View {
         NavigationStack {
             List(viewModel.filteredTasks) { task in
-                HStack(alignment: .top) {
-                    Button {
-                        withAnimation(.spring(duration: 0.2)) {
-                            viewModel.toggleCompleteStatus(for: task)
+                HStack {
+                    VStack {
+                        Button {
+                            withAnimation(.spring) {
+                                viewModel.toggleCompleteStatus(for: task)
+                            }
+                        } label: {
+                            Image(task.completed ? "yellowCheckmark" : "circle")
+                                .foregroundStyle(task.completed ? .yellow : .primary)
+                                .padding(.trailing, 2)
                         }
-                    } label: {
-                        Image(task.completed ? "yellowCheckmark" : "circle")
-                            .foregroundStyle(task.completed ? .yellow : .primary)
-                            .padding(.trailing, 2)
+                        
+                        Spacer()
                     }
-                    
+
                     taskCardfor(task)
                         .onTapGesture { viewModel.selectedTask = task }
                 }
@@ -45,7 +49,9 @@ struct TaskListView: View {
                     }
                     
                     Button(role: .destructive) {
-                        viewModel.delete(task)
+                        Task {
+                            await viewModel.delete(task)
+                        }
                     } label: {
                         Label("Удалить", systemImage: "trash")
                     }
@@ -98,8 +104,10 @@ extension TaskListView {
                 .foregroundColor(task.completed ? .gray : .primary)
             
             if let content = task.content {
-                Text(content)
-                    .foregroundStyle(task.completed ? .gray : .white)
+                if !content.isEmpty {
+                    Text(content)
+                        .foregroundStyle(task.completed ? .gray : .white)
+                }
             }
             
             Text(viewModel.formatDateForDisplay(task.timestamp))

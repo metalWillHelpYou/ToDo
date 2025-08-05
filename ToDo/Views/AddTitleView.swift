@@ -19,7 +19,9 @@ struct AddTitleView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             
             Button {
-                viewModel.addTask(todo: viewModel.titleInput)
+                Task {
+                    await viewModel.addTask(todo: viewModel.titleInput)
+                }
                 dismiss()
             } label: {
                 Text("Добавить")
